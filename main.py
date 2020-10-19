@@ -1,25 +1,16 @@
-text = "thisismysampletext"
-keyword = "tesla"
+# !/usr/bin/python
+import sys
 
-text = text.upper()
-keyword = keyword.upper()
-
-
-def elongateKeyword(keyword, plaintext):
-    targetLength = len(plaintext)
-    keyText = ""
-
-    while len(keyText) < targetLength:
-        for letter in keyword:
-            keyText += letter
-            if len(keyText) >= targetLength:
-                break
-
-    return keyText
+print(sys.argv)
+if len(sys.argv) < 4:
+    print('usage: ARGS="encode/decode plaintext/ciphertext keyword')
+    sys.exit()
 
 
-if len(text) != len(keyword):
-    keyword = elongateKeyword(keyword, text)
+whatToDo = sys.argv[1]
+encodeOrDecode = True
+text = sys.argv[2].upper()
+keyword = sys.argv[3].upper()
 
 letterToNum = {
     "A": 0,
@@ -78,27 +69,56 @@ numToLetter = {
     25: "Z",
 }
 
+if whatToDo == "encode":
+    encodeOrDecode = True
+elif whatToDo == "decode":
+    encodeOrDecode = False
+
+
+def preProcessing(text):
+    replaceDict = {" ": "", ",": "", ".": "", "!": "", "?": ""}
+    for before, after in replaceDict.items():
+        text = text.replace(before, after)
+    return text
+
+
+def elongateKeyword(keyword, plaintext):
+    targetLength = len(plaintext)
+    keyText = ""
+
+    while len(keyText) < targetLength:
+        for letter in keyword:
+            keyText += letter
+            if len(keyText) >= targetLength:
+                break
+
+    return keyText
+
+
 # num = letterToNum["E"]
 # num2 = letterToNum["Y"]
 # print(numToLetter[(num + num2) % 26])
 
 
-def encypt(plaintext, keyText):
-    cipherText = ""
+# def encypt(plaintext, keyText):
+#     cipherText = ""
 
-    if len(plaintext) != len(keyText):
-        keyText = elongateKeyword(keyText, plaintext)
+#     if len(plaintext) != len(keyText):
+#         keyText = elongateKeyword(keyText, plaintext)
 
-    for letter, key in zip(plaintext, keyText):
-        letterNum = letterToNum[letter]
-        keyNum = letterToNum[key]
-        encryptedLetter = numToLetter[(letterNum + keyNum) % 26]
-        cipherText += encryptedLetter
+#     for letter, key in zip(plaintext, keyText):
+#         letterNum = letterToNum[letter]
+#         keyNum = letterToNum[key]
+#         encryptedLetter = numToLetter[(letterNum + keyNum) % 26]
+#         cipherText += encryptedLetter
 
-    return cipherText
+#     return cipherText
 
 
 def vigenere(text, key, encrypt: bool):
+    text = preProcessing(text)
+    key = preProcessing(key)
+
     newText = ""
 
     if len(text) != len(key):
@@ -117,12 +137,12 @@ def vigenere(text, key, encrypt: bool):
             letterNum = letterToNum[letter]
             keyNum = letterToNum[key]
 
-            newLetter = numToLetter[abs(letter - key) % 26]
+            newLetter = numToLetter[(letterNum - keyNum + 52) % 26]
             newText += newLetter
         return newText
 
 
-print(vigenere(text, keyword, True))
+print("\nresult: " + vigenere(text, keyword, encodeOrDecode))
 
 # print(encypt(plaintext, keyword))
 
