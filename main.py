@@ -95,26 +95,6 @@ def elongateKeyword(keyword, plaintext):
     return keyText
 
 
-# num = letterToNum["E"]
-# num2 = letterToNum["Y"]
-# print(numToLetter[(num + num2) % 26])
-
-
-# def encypt(plaintext, keyText):
-#     cipherText = ""
-
-#     if len(plaintext) != len(keyText):
-#         keyText = elongateKeyword(keyText, plaintext)
-
-#     for letter, key in zip(plaintext, keyText):
-#         letterNum = letterToNum[letter]
-#         keyNum = letterToNum[key]
-#         encryptedLetter = numToLetter[(letterNum + keyNum) % 26]
-#         cipherText += encryptedLetter
-
-#     return cipherText
-
-
 def vigenere(text, key, encrypt: bool):
     text = preProcessing(text)
     key = preProcessing(key)
@@ -143,6 +123,4 @@ def vigenere(text, key, encrypt: bool):
 
 
 print("\nresult: " + vigenere(text, keyword, encodeOrDecode))
-
-# print(encypt(plaintext, keyword))
 
